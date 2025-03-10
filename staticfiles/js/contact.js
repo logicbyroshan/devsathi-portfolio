@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    console.log("JavaScript Loaded!"); // Check if JS is running
-
     let contactForm = document.getElementById("contactForm");
     if (!contactForm) {
         console.error("❌ contactForm not found!");
