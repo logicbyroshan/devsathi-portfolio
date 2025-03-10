@@ -1,10 +1,3 @@
-function showPopup() {
-  document.getElementById("resumePopup").style.display = "flex";
-}
-
-function closePopup() {
-  document.getElementById("resumePopup").style.display = "none";
-}
 
 //Navbar toggle
 document.addEventListener("DOMContentLoaded", function () {
@@ -180,9 +173,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const openIcon = toggleIcon.dataset.closedIcon;
         const closeIcon = toggleIcon.dataset.openIcon;
 
-        console.log("Open Icon Path:", openIcon);  // Debugging
-        console.log("Close Icon Path:", closeIcon);  // Debugging
-
         toggleIcon.addEventListener("click", () => {
             if (answer.style.display === "none" || !answer.style.display) {
                 answer.style.display = "block";
@@ -196,8 +186,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
-
-
 
 
   //Progreess skill bar
@@ -219,7 +207,6 @@ document.addEventListener("DOMContentLoaded", () => {
 //Hobbies slider
 let nextDom = document.getElementById('next');
 let prevDom = document.getElementById('prev');
-
 let carouselDom = document.querySelector('.carousel');
 let SliderDom = carouselDom.querySelector('.carousel .list');
 let thumbnailBorderDom = document.querySelector('.carousel .thumbnail');
@@ -268,7 +255,6 @@ function showSlider(type){
 
 
 //category filter toggle
-
 document.addEventListener("DOMContentLoaded", () => {
   const menuToggle = document.getElementById("menu-toggle");
   const menuItems = document.getElementById("menu-items");
@@ -281,7 +267,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 //freelance card js
-
 const cardWrapper = document.querySelector('.card-wrapper');
 const cards = document.querySelectorAll('.card');
 const prevBtn = document.querySelector('.prev-btn');
@@ -324,23 +309,6 @@ showAllBtn.addEventListener('click', () => {
 // Initialize slider
 updateSlider();
 
-
-//book page
-document.addEventListener('DOMContentLoaded', () => {
-  const starRatingDiv = document.querySelector('.star-rating');
-  const rating = parseInt(starRatingDiv.getAttribute('data-rating'));
-
-  for (let i = 1; i <= 5; i++) {
-      const star = document.createElement('img');
-      if (i <= rating) {
-          star.src = '../static/icons/1000874.png';
-      } else {
-          star.src = '../static/icons/2107957.png';
-      }
-      star.alt = 'Star';
-      starRatingDiv.appendChild(star);
-  }
-});
 
 
 //footer dropdown

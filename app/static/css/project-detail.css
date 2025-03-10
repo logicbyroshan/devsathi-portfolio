@@ -125,6 +125,17 @@
       border-radius: 10px;
   }
 
+  .project-header .category-tag {
+    display: inline-block;
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 5px 10px;
+    border-radius: 5px;
+    margin-right: 5px;
+    font-size: 14px;
+}
+
+
   .project-brief {
     width: 100%;
     display: flex;

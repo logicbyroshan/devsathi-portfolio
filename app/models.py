@@ -39,6 +39,10 @@ class Project(models.Model):
     solution = models.TextField(max_length=500, null=True, blank=True)
     impact = models.TextField(max_length=500, null=True, blank=True)
 
+    # New fields for GitHub and Live Project link
+    github_link = models.URLField(max_length=500, null=True, blank=True, help_text="GitHub repository link")
+    live_link = models.URLField(max_length=500, null=True, blank=True, help_text="Live project link")
+
     def save(self, *args, **kwargs):
         if not self.slug:
             base_slug = slugify(self.title)

@@ -105,6 +105,17 @@
                             <a href="{% url 'project_detail' slug=project.slug %}">
                                 <button class="outline-btn">VIEW DETAILS</button>
                             </a>
+                            {% if project.github_link %}
+                                <a href="{{ project.github_link }}" target="_blank">
+                                    <button class="outline-btn">GitHub Link</button>
+                                </a>
+                            {% endif %}
+
+                            {% if project.live_link %}
+                                <a href="{{ project.live_link }}" target="_blank">
+                                    <button class="outline-btn">Live Link</button>
+                                </a>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

@@ -7,7 +7,11 @@
         <div class="project-detail-card">
             <!-- Project Header -->
             <div class="project-header">
-                <p class="project-meg">{{ project.category }}</p>
+                <p class="project-meg">
+                    {% for category in project.get_category_list %}
+                        <span class="category-tag">{{ category }}</span>
+                    {% endfor %}
+                </p>
                 <p class="project-meg">Published: <span>{{ project.publication_date|date:"M d, Y" }}</span></p>
                 <p class="project-meg">Read Time: <span>10 min</span></p> <!-- Add read-time logic if needed -->
                 <div class="project-tags">

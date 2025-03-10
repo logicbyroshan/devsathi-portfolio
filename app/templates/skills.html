@@ -11,41 +11,126 @@
     {% include 'filters.html' %}
     <div class="ver-cards">
         {% for skill in skills %}
-        <div class="skills-card">
-            <div class="top-content">
-                <div class="skill-content">
-                    <div class="skill-image">
-                        {% if skill.icon %}
-                            <img src="{{ skill.icon.url }}" alt="{{ skill.name }}">
-                        {% else %}
-                            <img src="{% static 'images/icons/defoult.jpg' %}" alt="Default Icon">
+            <div class="skills-card">
+                <div class="top-content">
+                    <div class="skill-content">
+                        <div class="skill-image">
+                            {% if skill.icon %}
+                                <img src="{{ skill.icon.url }}" alt="{{ skill.name }}">
+                            {% else %}
+                                <img src="{% static 'images/icons/default.jpg' %}" alt="Default Icon">
+                            {% endif %}
+                        </div>
+                        <h3>{{ skill.name }}</h3>
+                    </div>
+
+                    <div class="progress-card">
+                        <span class="progress-tag2">
+                            {{ skill.status }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="skills-content">
+                    <div class="progress-container" data-progress="{{ skill.level }}">
+                        <div class="progress"></div>
+                    </div>
+                    <p>{{ skill.description }}</p>
+
+                    <div class="skills-links">
+                        {% if skill.certificate %}
+                            <button class="outline-btn" onclick="openModal('certificate-modal-{{ skill.id }}')">
+                                View Certificate
+                            </button>
+
+                            <!-- Certificate Popup -->
+                            <div id="certificate-modal-{{ skill.id }}" class="modal">
+                                <div class="modal-content">
+                                    <span class="close" onclick="closeModal('certificate-modal-{{ skill.id }}')">&times;</span>
+                                    <h2>Certificate Preview</h2>
+                                    <iframe src="{{ skill.certificate.url }}" width="100%" height="500px"></iframe>
+                                </div>
+                            </div>
                         {% endif %}
 
+                        {% if skill.resource_links %}
+                            <button class="outline-btn" onclick="openModal('resource-modal-{{ skill.id }}')">
+                                Used Resources
+                            </button>
+
+                            <!-- Resource Popup -->
+                            <div id="resource-modal-{{ skill.id }}" class="modal">
+                                <div class="modal-content">
+                                    <span class="close" onclick="closeModal('resource-modal-{{ skill.id }}')">&times;</span>
+                                    <h2>Used Resources</h2>
+                                    <ul>
+                                        {% for resource in skill.get_resource_list %}
+                                            {% if "youtube.com" in resource %}
+                                                <li>
+                                                    <iframe width="100%" height="315" 
+                                                            src="{{ resource|replace:'watch?v=,embed/' }}" 
+                                                            frameborder="0" allowfullscreen>
+                                                    </iframe>
+                                                </li>
+                                            {% elif ".pdf" in resource or ".doc" in resource %}
+                                                <li>
+                                                    <iframe src="{{ resource }}" width="100%" height="500px"></iframe>
+                                                </li>
+                                            {% else %}
+                                                <li><a href="{{ resource }}" target="_blank">{{ resource }}</a></li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
-                    <h3>{{ skill.name }}</h3>
-                </div>
-    
-                <div class="progress-card">
-                    <span class="progress-tag2">
-                        {{ skill.status }}
-                    </span>
                 </div>
             </div>
-    
-            <div class="skills-content">
-                <div class="progress-container" data-progress="{{ skill.level }}">
-                    <div class="progress"></div>
-                </div>
-                <p>{{ skill.description }}</p>
-                <div class="skills-links">
-                    <button class="outline-btn">View Certificate</button>
-                    <button class="outline-btn">Used Resources</button>
-                </div>
-            </div>
-        </div>
         {% empty %}
-        <p>No Skills Found</p>
+            <p>No Skills Found</p>
         {% endfor %}
     </div>
 </div>  
+
+<!-- CSS for Modal -->
+<style>
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    .modal-content {
+        background-color: #fff;
+        margin: 10% auto;
+        padding: 20px;
+        border-radius: 10px;
+        width: 80%;
+        max-width: 600px;
+        text-align: center;
+        position: relative;
+    }
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 24px;
+        cursor: pointer;
+    }
+</style>
+
+<!-- JavaScript for Modal -->
+<script>
+    function openModal(id) {
+        document.getElementById(id).style.display = "block";
+    }
+    function closeModal(id) {
+        document.getElementById(id).style.display = "none";
+    }
+</script>
 {% endblock %}

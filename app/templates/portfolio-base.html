@@ -69,11 +69,11 @@
         <div id="popup" class="popup">
             <div class="popup-content">
             {% if resume and resume.file %}
-                <span class="close" onclick="closePopup()">&times;</span>
                 <iframe src="https://docs.google.com/gview?url={{ resume.file.url }}&embedded=true" width="100%" height="90%"></iframe>
                 <a href="{{ resume.file.url }}" download>
                     <button class="download-btn">Download</button>
                 </a>
+                <span class="close" onclick="closePopup()">&times;</span>
             {% else %}
                 <p>No resume available.</p>
             {% endif %}
