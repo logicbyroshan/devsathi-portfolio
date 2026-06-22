@@ -1,10 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 import math
-import datetime
 from tinymce.models import HTMLField
-from django.core.exceptions import ValidationError
-from django.core.validators import FileExtensionValidator
 from django.core.validators import FileExtensionValidator
 from io import BytesIO
 from PIL import Image
@@ -23,6 +20,13 @@ def optimize_image_field(image_field, high_quality=False):
             image_field.file.seek(0)
             img = Image.open(image_field.file)
             
+            if ext != 'gif':
+                if img.mode in ('RGBA', 'P') and ext != 'png':
+                    img = img.convert('RGB')
+                # Aggressive resizing: HD for high quality, tiny (800x800 max) for icons/thumbnails
+                max_size = (1920, 1080) if high_quality else (800, 800)
+                img.thumbnail(max_size, Image.Resampling.LANCZOS)
+
             output = BytesIO()
             quality = 85 if high_quality else 60
             

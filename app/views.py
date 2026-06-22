@@ -1,10 +1,8 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from .models import Project, Blog, Skill, Experience, FAQ, Resume, ContactMessage
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.core.mail import send_mail
-from django.contrib import messages
-from .forms import ContactForm
 from django.http import JsonResponse
 from django.http import FileResponse, HttpResponse
 import logging
@@ -83,33 +81,7 @@ def handle_contact_submission(request):
             "error": "Something went wrong. Please try again later."
         }, status=500)
 
-def contact_view(request):
-    if request.method == "POST":
-        name = request.POST.get("name")
-        email = request.POST.get("email")
-        message = request.POST.get("message")
 
-        logger.info(f"Received data: Name={name}, Email={email}, Message={message}")
-
-        if not all([name, email, message]):
-            logger.error("Form data missing")
-            return JsonResponse({"success": False, "error": "Missing fields"}, status=400)
-
-        try:
-            send_mail(
-                subject=f"New Contact Form Submission from {name}",
-                message=f"Sender: {name}\nEmail: {email}\nMessage: {message}",
-                from_email="contact@roshandamor.site",
-                recipient_list=["contact@roshandamor.site"],
-                fail_silently=False,
-            )
-            logger.info("Email sent successfully")
-            return JsonResponse({"success": True})
-        except Exception as e:
-            logger.error(f"Email sending failed: {e}")
-            return JsonResponse({"success": False, "error": str(e)}, status=500)
-
-    return JsonResponse({"success": False, "error": "Invalid request"}, status=400)
 
 def latest_resume(request):
     latest_resume = Resume.objects.order_by("-uploaded_at").first()
