@@ -4,7 +4,7 @@
         {% if project.images.all %}
             <img src="{{ project.images.first.image.url }}" alt="{{ project.title }}">
         {% else %}
-            <img src="{% static 'images/others/Project Image1.jpg' %}" alt="Default Image"> <!-- Fallback -->
+            <img src="{% static 'images/others/Project Image1.webp' %}" alt="Default Image"> <!-- Fallback -->
         {% endif %}                       
     </div>
     <div class="project-content">
