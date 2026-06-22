@@ -12,3 +12,4 @@ tzdata
 whitenoise
 django-cleanup
 django-csp
+django-jazzmin
