@@ -5,7 +5,37 @@ import datetime
 from tinymce.models import HTMLField
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator
+from django.core.validators import FileExtensionValidator
+from io import BytesIO
+from PIL import Image
+from django.core.files.base import ContentFile
 
+def optimize_image_field(image_field, high_quality=False):
+    if not image_field or not image_field.name:
+        return
+        
+    ext = image_field.name.split('.')[-1].lower()
+    if ext in ['webp', 'svg', 'pdf', 'ico']:
+        return
+
+    if ext in ['png', 'jpg', 'jpeg', 'gif']:
+        try:
+            image_field.file.seek(0)
+            img = Image.open(image_field.file)
+            
+            output = BytesIO()
+            quality = 85 if high_quality else 60
+            
+            if ext == 'gif':
+                img.save(output, format='WEBP', save_all=True, optimize=True, quality=quality)
+            else:
+                img.save(output, format='WEBP', quality=quality, optimize=True)
+                
+            output.seek(0)
+            new_name = image_field.name.rsplit('.', 1)[0] + '.webp'
+            image_field.save(new_name, ContentFile(output.read()), save=False)
+        except Exception as e:
+            pass
 
 def validate_file_size(value):
     limit = 5 * 1024 * 1024  # 5MB
@@ -66,6 +96,10 @@ class ProjectImage(models.Model):
     image = models.ImageField(upload_to="projects/images/")
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def save(self, *args, **kwargs):
+        optimize_image_field(self.image, high_quality=True)
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"Image for {self.project.title}"
 
@@ -76,6 +110,10 @@ class Feature(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    def save(self, *args, **kwargs):
+        optimize_image_field(self.image, high_quality=True)
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return f"{self.title} - {self.project.title}"
@@ -112,6 +150,7 @@ class Blog(models.Model):
             self.slug = slug
 
         self.time_to_read = self.calculate_reading_time()
+        optimize_image_field(self.image, high_quality=True)
         super().save(*args, **kwargs)
 
     def calculate_reading_time(self):
@@ -139,6 +178,10 @@ class Experience(models.Model):
 
     class Meta:
         ordering = ["-start_date"]
+
+    def save(self, *args, **kwargs):
+        optimize_image_field(self.image, high_quality=True)
+        super().save(*args, **kwargs)
 
     def get_category_list(self):
         return [cat.strip() for cat in self.categories.split(",") if cat.strip()]
@@ -185,6 +228,10 @@ class Skill(models.Model):
 
     class Meta:
         ordering = ["-level", "name"]
+
+    def save(self, *args, **kwargs):
+        optimize_image_field(self.icon, high_quality=False)
+        super().save(*args, **kwargs)
 
     def get_category_list(self):
         return [cat.strip() for cat in self.categories.split(",") if cat.strip()]

@@ -10,3 +10,4 @@ python-dotenv
 sqlparse
 tzdata
 whitenoise
+django-cleanup
