@@ -227,7 +227,18 @@ TINYMCE_DEFAULT_CONFIG = {
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 SECURE_BROWSER_XSS_FILTER = True
 
-# Security Settings
+# Security Settings & CSP
+MIDDLEWARE.insert(MIDDLEWARE.index('django.middleware.security.SecurityMiddleware') + 1, 'csp.middleware.CSPMiddleware')
+
+# Strict Content Security Policy
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://fonts.googleapis.com")
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", "'unsafe-eval'", "https://cdn.tiny.cloud")
+CSP_IMG_SRC = ("'self'", "data:", "https://*")
+CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com", "data:")
+CSP_CONNECT_SRC = ("'self'",)
+CSP_FRAME_SRC = ("'self'", "https://www.youtube.com", "https://player.vimeo.com")
+
 if PRODUCTION:
     # Production Security Settings
     # HTTPS/SSL Settings
@@ -253,6 +264,8 @@ else:
     SECURE_SSL_REDIRECT = False
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_REFERRER_POLICY = 'same-origin'
     print("🔧 Development security settings (relaxed for local development)")
 
 # Logging Configuration

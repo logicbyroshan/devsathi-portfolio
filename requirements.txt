@@ -11,3 +11,4 @@ sqlparse
 tzdata
 whitenoise
 django-cleanup
+django-csp

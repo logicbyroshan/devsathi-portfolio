@@ -8,17 +8,40 @@ from .forms import ContactForm
 from django.http import JsonResponse
 from django.http import FileResponse, HttpResponse
 import logging
+from django.utils import timezone
 
 
 logger = logging.getLogger(__name__)
 
+def get_client_ip(request):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        ip = x_forwarded_for.split(',')[0]
+    else:
+        ip = request.META.get('REMOTE_ADDR')
+    return ip
+
 def handle_contact_submission(request):
-    """Handle contact form submission and save to database"""
+    """Handle contact form submission and save to database with rate limiting"""
     try:
-        name = request.POST.get("name")
-        email = request.POST.get("email")
-        subject = request.POST.get("subject")
-        message = request.POST.get("message")
+        # Rate Limiting: Max 3 requests per IP per day
+        client_ip = get_client_ip(request)
+        today = timezone.now() - timezone.timedelta(days=1)
+        recent_submissions = ContactMessage.objects.filter(
+            subject__endswith=f"[{client_ip}]", 
+            created_at__gte=today
+        ).count()
+        
+        if recent_submissions >= 3:
+            return JsonResponse({
+                "success": False, 
+                "error": "You have reached the maximum number of contact requests for today. Please try again tomorrow."
+            }, status=429)
+
+        name = request.POST.get("name", "").strip()
+        email = request.POST.get("email", "").strip()
+        subject = request.POST.get("subject", "").strip()
+        message = request.POST.get("message", "").strip()
 
         # Validate required fields
         if not all([name, email, subject, message]):
@@ -27,12 +50,12 @@ def handle_contact_submission(request):
                 "error": "All fields are required"
             }, status=400)
 
-        # Save to database
+        # Save to database (append IP to subject for tracking)
         contact_message = ContactMessage.objects.create(
-            name=name,
-            email=email,
-            subject=subject,
-            message=message
+            name=name[:100],  # Hard limit size to prevent DB truncation errors
+            email=email[:254],
+            subject=f"{subject[:150]} [{client_ip}]",
+            message=message[:5000] # Max 5000 chars
         )
 
         # Try to send email (optional, won't fail if email doesn't work)
