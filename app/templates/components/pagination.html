@@ -1,0 +1,15 @@
+{% if page_obj.has_other_pages %}
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1{% if query %}&search={{ query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="page-link">&laquo; First</a>
+        <a href="?page={{ page_obj.previous_page_number }}{% if query %}&search={{ query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="page-link">Previous</a>
+    {% endif %}
+
+    <span class="current-page">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if query %}&search={{ query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="page-link">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if query %}&search={{ query }}{% endif %}{% if selected_category %}&category={{ selected_category }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}" class="page-link">Last &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}

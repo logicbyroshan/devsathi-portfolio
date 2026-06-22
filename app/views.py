@@ -66,7 +66,6 @@ def contact_view(request):
         email = request.POST.get("email")
         message = request.POST.get("message")
 
-        # Debugging: Log received data
         logger.info(f"Received data: Name={name}, Email={email}, Message={message}")
 
         if not all([name, email, message]):
@@ -89,11 +88,10 @@ def contact_view(request):
 
     return JsonResponse({"success": False, "error": "Invalid request"}, status=400)
 
-
-# Create your views here.
 def latest_resume(request):
     latest_resume = Resume.objects.order_by("-uploaded_at").first()
     return {"resume": latest_resume}
+    
 def get_resume(request):
     latest_resume = Resume.objects.order_by("-uploaded_at").first()
     if latest_resume:
@@ -107,8 +105,8 @@ def get_resume(request):
 def download_resume(request):
     latest_resume = Resume.objects.order_by("-uploaded_at").first()
     
-    if latest_resume and latest_resume.file:  # Ensure the file exists
-        latest_resume.file.open()  # Open file before passing to response
+    if latest_resume and latest_resume.file: 
+        latest_resume.file.open() 
         response = FileResponse(latest_resume.file, as_attachment=True, filename=latest_resume.file.name)
         return response
 
@@ -117,50 +115,45 @@ def download_resume(request):
 def user_terms_view(request):
     return render(request, "user-terms.html")
 
-
-
 def get_unique_categories(queryset, field_name):
-    """Extract unique categories from a given model field."""
+    """Extract unique categories from a given model field optimally."""
     categories = set()
-    for obj in queryset.values_list(field_name, flat=True):
-        if obj:  # Ensure the category field is not empty or None
-            for cat in obj.split(","):  # Split comma-separated categories
-                clean_cat = cat.strip()
-                if clean_cat and clean_cat.lower() != "uncategorized":  # Exclude "Uncategorized"
-                    categories.add(clean_cat)
-    return sorted(categories)  # Return sorted distinct categories
+    # Fetch only the non-empty categories strings directly from DB
+    raw_cats = queryset.exclude(**{f"{field_name}__isnull": True}).exclude(**{f"{field_name}__exact": ""}).values_list(field_name, flat=True)
+    for obj in raw_cats:
+        for cat in obj.split(","):
+            clean_cat = cat.strip()
+            if clean_cat and clean_cat.lower() != "uncategorized":
+                categories.add(clean_cat)
+    return sorted(categories)
 
 def home(request):
-    # Handle contact form submission
     if request.method == "POST" and request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return handle_contact_submission(request)
     
     sort_by = request.GET.get("sort", "-publication_date")  
     category = request.GET.get("category", "")
 
-    # Fetch all data
-    projects = Project.objects.prefetch_related("images").all()
+    # Optimized prefetching
+    projects = Project.objects.prefetch_related("images", "skills").all()
     blogs = Blog.objects.all()
     skills = Skill.objects.all()
     experiences = Experience.objects.all()
     faqs = FAQ.objects.all()
 
-    # Apply filtering based on category
     if category:
-        projects = projects.filter(Q(categories__icontains=category))
-        blogs = blogs.filter(Q(categories__icontains=category))
-        skills = skills.filter(Q(categories__icontains=category))
-        experiences = experiences.filter(Q(categories__icontains=category))
-        faqs = faqs.filter(Q(categories__icontains=category))
+        projects = projects.filter(categories__icontains=category)
+        blogs = blogs.filter(categories__icontains=category)
+        skills = skills.filter(categories__icontains=category)
+        experiences = experiences.filter(categories__icontains=category)
+        faqs = faqs.filter(categories__icontains=category)
 
-    # Apply sorting dynamically
     projects = projects.order_by(sort_by)[:3]
     blogs = blogs.order_by(sort_by)[:3]
     skills = skills.order_by("-level")[:6]
     experiences = experiences.order_by("-start_date")[:3]
     faqs = faqs.order_by("-created_at")[:5]
 
-    # Get distinct categories for all sections
     blog_categories = get_unique_categories(Blog.objects, "categories")
     project_categories = get_unique_categories(Project.objects, "categories")
     faq_categories = get_unique_categories(FAQ.objects, "categories")
@@ -183,18 +176,14 @@ def home(request):
     })
 
 def project_detail(request, slug):
-    project = get_object_or_404(Project, slug=slug)
+    project = get_object_or_404(Project.objects.prefetch_related('images', 'features', 'learnings', 'skills'), slug=slug)
 
-    # Get categories as a list
     category_list = project.get_category_list()
-
-    # Fetch similar projects (excluding current project)
-    similar_projects = Project.objects.filter(
+    similar_projects = Project.objects.prefetch_related("images", "skills").filter(
         categories__iregex=r'(' + '|'.join(category_list) + ')'
     ).exclude(id=project.id)[:3]
 
-    # Fetch latest projects (excluding current project)
-    latest_projects = Project.objects.exclude(id=project.id).order_by('-created_at')[:3]
+    latest_projects = Project.objects.prefetch_related("images", "skills").exclude(id=project.id).order_by('-created_at')[:3]
 
     return render(request, 'project-detail.html', {
         'project': project,
@@ -205,15 +194,11 @@ def project_detail(request, slug):
 def blog_detail(request, slug):
     blog = get_object_or_404(Blog, slug=slug)
 
-    # Get categories as a list
     category_list = [cat.strip() for cat in blog.categories.split(",") if cat.strip()]
-
-    # Fetch similar blogs (excluding current blog)
     similar_blogs = Blog.objects.filter(
         categories__iregex=r'(' + '|'.join(category_list) + ')'
     ).exclude(id=blog.id)[:3]
 
-    # Fetch latest blogs (excluding current blog)
     latest_blogs = Blog.objects.exclude(id=blog.id).order_by('-created_at')[:3]
 
     return render(request, 'blog-detail.html', {
@@ -229,22 +214,15 @@ def project_list(request):
     category = request.GET.get('category', '')  
     sort_by = request.GET.get('sort', 'latest')  
 
-    projects = Project.objects.all()
-    
-    # Get unique categories for filtering (split and flatten)
-    category_list = []
-    for proj in Project.objects.all():
-        if proj.categories:
-            categories = [cat.strip() for cat in proj.categories.split(',')]
-            category_list.extend(categories)
-    category_list = sorted(list(set(category_list)))
+    projects = Project.objects.prefetch_related('images', 'skills').all()
+    category_list = get_unique_categories(Project.objects, "categories")
 
     if query:
         projects = projects.filter(
             Q(title__icontains=query) | 
             Q(description__icontains=query) |
             Q(categories__icontains=query)
-        )
+        ).distinct()
 
     if category and category != "all":  
         projects = projects.filter(categories__icontains=category)
@@ -254,8 +232,14 @@ def project_list(request):
     else:  # latest
         projects = projects.order_by('-created_at')
 
+    # Pagination: 6 per page
+    paginator = Paginator(projects, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'projects.html', {
-        'projects': projects, 
+        'projects': page_obj, 
+        'page_obj': page_obj,
         'query': query, 
         'selected_category': category, 
         'sort': sort_by, 
@@ -270,21 +254,14 @@ def blog_list(request):
     sort_by = request.GET.get('sort', 'latest')  
 
     blogs = Blog.objects.all()
-    
-    # Get unique categories for filtering (split and flatten)
-    category_list = []
-    for blog in Blog.objects.all():
-        if blog.categories:
-            categories = [cat.strip() for cat in blog.categories.split(',')]
-            category_list.extend(categories)
-    category_list = sorted(list(set(category_list)))
+    category_list = get_unique_categories(Blog.objects, "categories")
 
     if query:
         blogs = blogs.filter(
             Q(title__icontains=query) | 
             Q(content__icontains=query) |
             Q(categories__icontains=query)
-        )
+        ).distinct()
 
     if category and category != "all":  
         blogs = blogs.filter(categories__icontains=category)
@@ -294,8 +271,13 @@ def blog_list(request):
     else:  # latest
         blogs = blogs.order_by('-publication_date')
 
+    paginator = Paginator(blogs, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'blogs.html', {
-        'blogs': blogs, 
+        'blogs': page_obj, 
+        'page_obj': page_obj,
         'query': query, 
         'selected_category': category, 
         'sort': sort_by, 
@@ -310,21 +292,14 @@ def skill_list(request):
     sort_by = request.GET.get('sort', 'latest')  
 
     skills = Skill.objects.all()
-    
-    # Get unique categories for filtering (split and flatten)
-    category_list = []
-    for skill in Skill.objects.all():
-        if skill.categories:
-            categories = [cat.strip() for cat in skill.categories.split(',')]
-            category_list.extend(categories)
-    category_list = sorted(list(set(category_list)))
+    category_list = get_unique_categories(Skill.objects, "categories")
 
     if query:
         skills = skills.filter(
             Q(name__icontains=query) | 
             Q(description__icontains=query) |
             Q(categories__icontains=query)
-        )
+        ).distinct()
 
     if category and category != "all":  
         skills = skills.filter(categories__icontains=category)
@@ -338,8 +313,13 @@ def skill_list(request):
     else:  # latest
         skills = skills.order_by('-created_at')
 
+    paginator = Paginator(skills, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'skills.html', {
-        'skills': skills, 
+        'skills': page_obj, 
+        'page_obj': page_obj,
         'query': query, 
         'selected_category': category, 
         'sort': sort_by, 
@@ -349,17 +329,17 @@ def skill_list(request):
 
 # Experience Views
 def experience_list(request):
-    query = request.GET.get('search', '')  # Fix for URL issue
+    query = request.GET.get('search', '')
     category = request.GET.get('category', '')
     sort_by = request.GET.get('sort', '-start_date')  
 
     experiences = Experience.objects.all()
-    categories = Experience.objects.values_list('categories', flat=True).distinct()  # ✅ Get all categories
+    category_list = get_unique_categories(Experience.objects, "categories")
 
     if query:
         experiences = experiences.filter(
-            Q(title__icontains=query) | Q(description__icontains=query)
-        )
+            Q(title__icontains=query) | Q(description__icontains=query) | Q(categories__icontains=query)
+        ).distinct()
 
     if category and category != "all":  
         experiences = experiences.filter(categories__icontains=category)
@@ -369,8 +349,17 @@ def experience_list(request):
     else:
         experiences = experiences.order_by('-start_date')
 
+    paginator = Paginator(experiences, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'experiences.html', {
-        'experiences': experiences, 'query': query, 'category': category, 'sort_by': sort_by, 'categories': categories
+        'experiences': page_obj, 
+        'page_obj': page_obj,
+        'query': query, 
+        'category': category, 
+        'sort_by': sort_by, 
+        'categories': category_list
     })
 
 
@@ -382,31 +371,31 @@ def faq_list(request):
 
     faqs = FAQ.objects.all()
     
-    # Get unique categories for filtering (split and flatten)
-    category_list = []
-    for faq in FAQ.objects.all():
-        if faq.category:
-            categories = [cat.strip() for cat in faq.category.split(',')]
-            category_list.extend(categories)
-    category_list = sorted(list(set(category_list)))
+    # FAQ uses 'categories' now to match others based on models.py
+    category_list = get_unique_categories(FAQ.objects, "categories")
 
     if query:
         faqs = faqs.filter(
             Q(question__icontains=query) | 
             Q(answer__icontains=query) |
-            Q(category__icontains=query)
-        )
+            Q(categories__icontains=query)
+        ).distinct()
 
     if category and category != "all":  
-        faqs = faqs.filter(category__icontains=category)
+        faqs = faqs.filter(categories__icontains=category)
 
     if sort_by == 'oldest':
         faqs = faqs.order_by('created_at')
     else:  # latest
         faqs = faqs.order_by('-created_at')
 
+    paginator = Paginator(faqs, 6)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
     return render(request, 'faqs.html', {
-        'faqs': faqs, 
+        'faqs': page_obj, 
+        'page_obj': page_obj,
         'query': query, 
         'selected_category': category, 
         'sort': sort_by, 

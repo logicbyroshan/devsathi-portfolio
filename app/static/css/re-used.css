@@ -421,3 +421,32 @@ img:hover {
     line-height: 1.6;
     margin: 0;
 }
+
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+.pagination .page-link {
+    padding: 8px 16px;
+    background: var(--bg-card);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+.pagination .page-link:hover {
+    background: var(--primary);
+    color: var(--bg-main);
+}
+.pagination .current-page {
+    color: var(--text-light);
+    font-weight: 600;
+}

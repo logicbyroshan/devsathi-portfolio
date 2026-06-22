@@ -55,8 +55,8 @@ class Resume(models.Model):
 
 # Project Model
 class Project(models.Model):
-    title = models.CharField(max_length=255)
-    categories = models.CharField(max_length=255, help_text="Separate categories with commas", default="Uncategorized")
+    title = models.CharField(max_length=255, db_index=True)
+    categories = models.CharField(max_length=255, help_text="Separate categories with commas", default="Uncategorized", db_index=True)
     publication_date = models.DateTimeField(auto_now_add=True)
     tags = models.CharField(max_length=255)
     description = models.TextField(max_length=500)
@@ -129,12 +129,12 @@ class Learning(models.Model):
 
 
 class Blog(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, db_index=True)
     content = HTMLField()  # Now using TinyMCE for rich-text content
     image = models.ImageField(upload_to="blogs/")
     publication_date = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True, blank=True)
-    categories = models.CharField(max_length=255, help_text="Separate categories with commas", default="Uncategorized")
+    categories = models.CharField(max_length=255, help_text="Separate categories with commas", default="Uncategorized", db_index=True)
     time_to_read = models.PositiveIntegerField(default=1, editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -167,12 +167,12 @@ class Blog(models.Model):
 
 # Experience Model
 class Experience(models.Model):
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, db_index=True)
     image = models.ImageField(upload_to="experience/")
     start_date = models.DateField()
     end_date = models.DateField(null=True, blank=True)
     description = models.TextField()
-    categories = models.CharField(max_length=255, help_text="Separate categories with commas", default="Uncategorized")
+    categories = models.CharField(max_length=255, help_text="Separate categories with commas", default="Uncategorized", db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -192,9 +192,9 @@ class Experience(models.Model):
 
 # FAQ Model
 class FAQ(models.Model):
-    question = models.CharField(max_length=300)
+    question = models.CharField(max_length=300, db_index=True)
     answer = models.TextField()
-    categories = models.CharField(max_length=255, help_text="Separate categories with commas", default="Uncategorized")
+    categories = models.CharField(max_length=255, help_text="Separate categories with commas", default="Uncategorized", db_index=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -215,12 +215,12 @@ class Skill(models.Model):
         ("Average", "Average"),
     ]
 
-    name = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=100, unique=True, db_index=True)
     icon = models.ImageField(upload_to="skills/icons/", blank=True, null=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="Learning")
     level = models.PositiveIntegerField(default=50)
     description = models.TextField(max_length=500, blank=True)
-    categories = models.CharField(max_length=255, help_text="Separate categories with commas", default="Uncategorized")
+    categories = models.CharField(max_length=255, help_text="Separate categories with commas", default="Uncategorized", db_index=True)
     certificate = models.FileField(upload_to="skills/certificates/", blank=True, null=True, help_text="Upload a certificate image, PDF, or DOC file")
     resource_links = models.TextField(blank=True, help_text="Enter resource links separated by commas (YouTube, PDFs, Docs, Images)")
     created_at = models.DateTimeField(auto_now_add=True)
