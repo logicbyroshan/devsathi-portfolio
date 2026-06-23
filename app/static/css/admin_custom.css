@@ -1,0 +1,86 @@
+:root {
+    --main-bg-color-1: #001530;
+    --main-bg-color-2: #0c1134;
+    --main-outline-color: #667eea;
+    --heading-text-color: #ffffff;
+    --main-text-color: #e5e5e5;
+}
+
+[data-theme="dark"] body, 
+body, 
+.content-wrapper, 
+.wrapper,
+.main-header, 
+.main-sidebar, 
+.brand-link,
+aside,
+.content {
+    background-color: var(--main-bg-color-1) !important;
+    color: var(--main-text-color) !important;
+}
+
+.card {
+    background: linear-gradient(135deg, #040914 0%, #041415 100%) !important;
+    border: 1px solid var(--main-outline-color) !important;
+}
+
+.card-header, .card-footer {
+    background: transparent !important;
+    border-bottom: 1px solid var(--main-outline-color) !important;
+}
+
+.card-title, h1, h2, h3, h4, h5, h6 {
+    color: var(--heading-text-color) !important;
+}
+
+/* Sidebar styling */
+.main-sidebar, .sidebar, .brand-link {
+    background: var(--main-bg-color-2) !important;
+    border-right: 1px solid var(--main-outline-color) !important;
+}
+
+.nav-sidebar .nav-item > .nav-link {
+    color: var(--main-text-color) !important;
+}
+
+.nav-sidebar .nav-item > .nav-link.active {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: var(--heading-text-color) !important;
+}
+
+/* Links and buttons */
+a {
+    color: var(--main-outline-color) !important;
+}
+
+.btn-primary, .btn-info, .btn-success {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    border: none !important;
+    color: var(--heading-text-color) !important;
+}
+
+.table {
+    color: var(--main-text-color) !important;
+}
+
+.table th {
+    color: var(--heading-text-color) !important;
+    border-bottom: 1px solid var(--main-outline-color) !important;
+}
+
+.table td {
+    border-top: 1px solid rgba(102, 126, 234, 0.2) !important;
+    color: var(--main-text-color) !important;
+}
+
+/* Form controls */
+.form-control, .select2-container--default .select2-selection--single {
+    background-color: #041415 !important;
+    border: 1px solid var(--main-outline-color) !important;
+    color: var(--main-text-color) !important;
+}
+
+/* Fix specific texts */
+.text-dark, .text-muted {
+    color: var(--main-text-color) !important;
+}
