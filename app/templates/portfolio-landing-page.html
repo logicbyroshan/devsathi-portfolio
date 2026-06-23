@@ -130,5 +130,52 @@
 
 
 
+        <!--Contact Is Staring From Here-->
+        <div id="contact" class="all-container">
+            <div class="cards-header">
+                <h1>contact me.</h1>
+                <p>Have a question or want to work together? Drop a message!</p>
+            </div>
+            <div class="mail-contact-card">
+
+                <div class="left-contact">
+                    <img src="{% static 'images/stock/Contact.webp' %}" alt="">
+                    <div class="contact-section">
+                        <div class="contact">
+                            <img src="{% static 'images/icons/g-mail.webp' %}" alt="">
+                            <p>iamroshandamor@gmail.com</p>
+                        </div>
+                        <div class="contact">
+                            <img src="{% static 'images/icons/rmail.webp' %}" alt="">
+                            <p>contact@roshandamor.site</p>
+                        </div>
+                        <div class="contact">
+                            <img src="{% static 'images/icons/phone.webp' %}" alt="">
+                            <p>+91 1234567890</p>
+                        </div>
+                        <div class="contact">
+                            <img src="{% static 'images/icons/address.webp' %}" alt="">
+                            <p>Indore, Madhya Pradesh, India</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right-contact">
+                    <div class="contact-form-card">
+                        <form id="contactForm" method="POST">
+                            {% csrf_token %}
+                            <input type="text" name="name" placeholder="Name" required>
+                            <input type="email" name="email" placeholder="E-mail" required>
+                            <input type="text" name="subject" placeholder="Subject" required>
+                            <textarea name="message" id="" cols="30" rows="8" placeholder="Message" required></textarea>
+                            <button type="submit" class="contact-btn">Send Message</button>
+                            <div id="formMessage"></div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
         {% include "components/skill_popups.html" %}
 {% endblock %}

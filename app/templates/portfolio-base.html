@@ -103,39 +103,7 @@
         {% block content %}
         {% endblock %}
 
-        <!--Contact Is Staring From Here-->
-        <div id="contact" class="all-container" style="margin-top: 50px;">
-            <div class="cards-header">
-                <h1>contact me.</h1>
-                <p>Have a question or want to work together? Drop a message!</p>
-            </div>
-            
-            <div class="contact-wrapper" style="max-width: 600px; margin: 0 auto; text-align: center; width: 100%;">
-                <button id="showFormBtn" class="outline-btn" style="margin-bottom: 2rem;">Let's Talk!</button>
-                
-                <form id="contactForm" style="display: none; text-align: left; background: var(--card-bg-color-1); padding: 2rem; border-radius: 12px; border: 1px solid var(--card-outline-color);">
-                    {% csrf_token %}
-                    <div style="margin-bottom: 1rem;">
-                        <label style="display: block; margin-bottom: 0.5rem; color: var(--secondary-text-color); font-family: var(--secondary-font);">Name</label>
-                        <input type="text" name="name" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--main-outline-color); background: var(--main-bg-color-1); color: var(--heading-text-color); font-family: var(--secondary-font);">
-                    </div>
-                    <div style="margin-bottom: 1rem;">
-                        <label style="display: block; margin-bottom: 0.5rem; color: var(--secondary-text-color); font-family: var(--secondary-font);">Email</label>
-                        <input type="email" name="email" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--main-outline-color); background: var(--main-bg-color-1); color: var(--heading-text-color); font-family: var(--secondary-font);">
-                    </div>
-                    <div style="margin-bottom: 1rem;">
-                        <label style="display: block; margin-bottom: 0.5rem; color: var(--secondary-text-color); font-family: var(--secondary-font);">Subject</label>
-                        <input type="text" name="subject" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--main-outline-color); background: var(--main-bg-color-1); color: var(--heading-text-color); font-family: var(--secondary-font);">
-                    </div>
-                    <div style="margin-bottom: 1rem;">
-                        <label style="display: block; margin-bottom: 0.5rem; color: var(--secondary-text-color); font-family: var(--secondary-font);">Message</label>
-                        <textarea name="message" rows="4" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid var(--main-outline-color); background: var(--main-bg-color-1); color: var(--heading-text-color); font-family: var(--secondary-font);"></textarea>
-                    </div>
-                    <button type="submit" class="outline-btn" style="width: 100%;">Send Message</button>
-                    <div id="formMessage" style="margin-top: 1rem; text-align: center; font-family: var(--secondary-font);"></div>
-                </form>
-            </div>
-        </div>
+
 
         <div class="footer">
             <h1 id="footer-typing-text"></h1>
