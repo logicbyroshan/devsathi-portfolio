@@ -1,10 +1,10 @@
 <div align="center">
 
-# 🌟 Roshan's Desk - Modern Personal Portfolio
+# 🌟 DevMitra - Modern Personal Portfolio
 
-<img src="stock-images/Portfolio Thumb.jpg" alt="Portfolio Cover" width="600" style="border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.3);" />
+<img src="stock-images/Portfolio Thumb.webp" alt="Portfolio Cover" width="600" style="border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.3);" />
 
-### 🚀 **Live Demo:** [portfoliov1.roshanproject.site](https://portfoliov1.roshanproject.site)
+### 🚀 **Live Demo:** [portfoliov1.roshanproject.site](https://devsarthiv1.rkdapp.site)
 
 ![Django](https://img.shields.io/badge/Django-5.2.5-092E20?style=for-the-badge&logo=django&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)
@@ -16,23 +16,6 @@
 **A modern, fully responsive portfolio website built with Django featuring dynamic content management, interactive UI, and comprehensive admin dashboard.**
 
 </div>
-
----
-
-## 📋 Table of Contents
-
-- [✨ Features](#-features)
-- [🎯 Live Demo](#-live-demo)
-- [📱 Screenshots](#-screenshots)
-- [🛠️ Tech Stack](#️-tech-stack)
-- [🚀 Installation & Setup](#-installation--setup)
-- [📁 Project Structure](#-project-structure)
-- [🔧 Configuration](#-configuration)
-- [🌐 Deployment](#-deployment)
-- [📖 API Documentation](#-api-documentation)
-- [🤝 Contributing](#-contributing)
-- [📞 Contact](#-contact)
-- [📄 License](#-license)
 
 ---
 
@@ -72,19 +55,6 @@
 
 ---
 
-## 🎯 Live Demo
-
-🌐 **Production Site:** [portfoliov1.roshanproject.site](https://portfoliov1.roshanproject.site)
-
-Experience the fully deployed portfolio with all features active, including:
-- Complete mobile responsiveness
-- Working contact form with email notifications
-- Interactive project showcases
-- Dynamic blog system
-- Downloadable resume functionality
-
----
-
 ## 📱 Screenshots
 
 <div align="center">
@@ -92,16 +62,16 @@ Experience the fully deployed portfolio with all features active, including:
 ### 🏠 Hero Section & Skills
 <table>
 <tr>
-<td><img src="stock-images/heross.png" alt="Hero Section" width="400"/></td>
-<td><img src="stock-images/skillss.png" alt="Skills Section" width="400"/></td>
+<td><img src="stock-images/heross.webp" alt="Hero Section" width="400"/></td>
+<td><img src="stock-images/skillss.webp" alt="Skills Section" width="400"/></td>
 </tr>
 </table>
 
 ### 📝 Blog System & Contact Form  
 <table>
 <tr>
-<td><img src="stock-images/blogsss.png" alt="Blog System" width="400"/></td>
-<td><img src="stock-images/contactss.png" alt="Contact Form" width="400"/></td>
+<td><img src="stock-images/blogsss.webp" alt="Blog System" width="400"/></td>
+<td><img src="stock-images/contactss.webp" alt="Contact Form" width="400"/></td>
 </tr>
 </table>
 
