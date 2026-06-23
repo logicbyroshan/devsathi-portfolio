@@ -123,8 +123,42 @@
                 {% endfor %}
             </div>
         
-            <div class="project-footer">
+    <div class="project-footer">
                 <a href="faqs/"><button class="outline-btn">VIEW ALL THE FAQS</button></a>
+            </div>
+        </div>
+
+        <!--Contact Is Staring From Here-->
+        <div id="contact" class="all-container">
+            <div class="cards-header">
+                <h1>contact me.</h1>
+                <p>Have a question or want to work together? Drop a message!</p>
+            </div>
+            
+            <div class="contact-wrapper" style="max-width: 600px; margin: 0 auto; text-align: center;">
+                <button id="showFormBtn" class="outline-btn" style="margin-bottom: 2rem;">Let's Talk!</button>
+                
+                <form id="contactForm" style="display: none; text-align: left; background: #1a1a1a; padding: 2rem; border-radius: 12px; border: 1px solid #333;">
+                    {% csrf_token %}
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: #aaa;">Name</label>
+                        <input type="text" name="name" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff;">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: #aaa;">Email</label>
+                        <input type="email" name="email" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff;">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: #aaa;">Subject</label>
+                        <input type="text" name="subject" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff;">
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <label style="display: block; margin-bottom: 0.5rem; color: #aaa;">Message</label>
+                        <textarea name="message" rows="4" required style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #444; background: #222; color: #fff;"></textarea>
+                    </div>
+                    <button type="submit" class="outline-btn" style="width: 100%;">Send Message</button>
+                    <div id="formMessage" style="margin-top: 1rem; text-align: center;"></div>
+                </form>
             </div>
         </div>
 
