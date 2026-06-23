@@ -1,10 +1,10 @@
 <div align="center">
 
-# 🌟 DevMitra - Modern Personal Portfolio
+# 🌟 DevSathi - Modern Personal Portfolio
 
 <img src="stock-images/Portfolio Thumb.webp" alt="Portfolio Cover" width="600" style="border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.3);" />
 
-### 🚀 **Live Demo:** [devmitra.rkdapp.site](https://devmitra.rkdapp.site)
+### 🚀 **Live Demo:** [devsathi.rkdapp.site](https://devsathi.rkdapp.site)
 
 ![Django](https://img.shields.io/badge/Django-5.2.5-092E20?style=for-the-badge&logo=django&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)
